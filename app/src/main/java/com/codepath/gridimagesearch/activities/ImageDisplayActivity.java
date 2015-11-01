@@ -1,6 +1,7 @@
 package com.codepath.gridimagesearch.activities;
 
 import android.media.Image;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +24,8 @@ public class ImageDisplayActivity extends AppCompatActivity {
         ImageResult imageResult = (ImageResult) getIntent().getParcelableExtra("image");
         ivFullImage = (ImageView) findViewById(R.id.ivFullImage);
         Picasso.with(ImageDisplayActivity.this).load(imageResult.fullUrl).into(ivFullImage);
+
+        getSupportActionBar().setTitle(imageResult.displayTitle);
     }
 
     @Override

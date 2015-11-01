@@ -14,12 +14,14 @@ public class ImageResult implements Parcelable {
     public String fullUrl;
     public String thumbUrl;
     public String title;
+    public String displayTitle;
 
     public ImageResult(JSONObject jsonObject) {
         try {
             this.fullUrl = jsonObject.getString("url");
             this.thumbUrl = jsonObject.getString("tbUrl");
             this.title = jsonObject.getString("title");
+            this.displayTitle = jsonObject.getString("titleNoFormatting");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -47,12 +49,14 @@ public class ImageResult implements Parcelable {
         dest.writeString(this.fullUrl);
         dest.writeString(this.thumbUrl);
         dest.writeString(this.title);
+        dest.writeString(this.displayTitle);
     }
 
     private ImageResult(Parcel in) {
         this.fullUrl = in.readString();
         this.thumbUrl = in.readString();
         this.title = in.readString();
+        this.displayTitle = in.readString();
     }
 
     public static final Creator<ImageResult> CREATOR = new Creator<ImageResult>() {

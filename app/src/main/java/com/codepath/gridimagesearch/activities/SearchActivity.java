@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
 import com.codepath.gridimagesearch.models.ImageResult;
+import com.codepath.gridimagesearch.utils.EndlessScrollListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -31,11 +32,12 @@ import cz.msebera.android.httpclient.Header;
 public class SearchActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
+    private static final int RESULTS_COUNT = 8;
 
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
-    SearchFilters searchFilters;
+    private SearchFilters searchFilters;
 
     private class SearchFilters {
         public String query = "";
@@ -68,6 +70,13 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                fetchQuery(true);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -80,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchFilters.query = query;
-                fetchQuery();
+                fetchQuery(false);
                 return true;
             }
 
@@ -101,9 +110,9 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void fetchQuery() {
+    public void fetchQuery(final boolean loadMore) {
         AsyncHttpClient client = new AsyncHttpClient();
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8";
+        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=" + RESULTS_COUNT;
         if (searchFilters.query.length() != 0)
             searchUrl += "&q=" + searchFilters.query;
         if (searchFilters.imageSize.length() != 0)
@@ -114,6 +123,8 @@ public class SearchActivity extends AppCompatActivity {
             searchUrl += "&imgtype=" + searchFilters.imageType;
         if (searchFilters.siteFilter.length() != 0)
             searchUrl += "&as_sitesearch=" + searchFilters.siteFilter;
+        if (loadMore)
+            searchUrl += "&start=" + imageResults.size();
 
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
@@ -121,7 +132,8 @@ public class SearchActivity extends AppCompatActivity {
                 JSONArray imageResultsJSON;
                 try {
                     imageResultsJSON = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear();
+                    if (!loadMore)
+                        imageResults.clear();
                     aImageResults.addAll(ImageResult.fromJSON(imageResultsJSON));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -152,7 +164,7 @@ public class SearchActivity extends AppCompatActivity {
             searchFilters.imageType = intent.getStringExtra("image_type");
             searchFilters.siteFilter = intent.getStringExtra("site_filter");
 
-            fetchQuery();
+            fetchQuery(false);
         }
     }
 }

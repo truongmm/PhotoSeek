@@ -30,9 +30,20 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE = 1;
+
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
+    SearchFilters searchFilters;
+
+    private class SearchFilters {
+        public String query = "";
+        public String imageSize = "";
+        public String imageColor = "";
+        public String imageType = "";
+        public String siteFilter = "";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
         imageResults = new ArrayList<>();
         aImageResults = new ImageResultsAdapter(SearchActivity.this, imageResults);
         gvResults.setAdapter(aImageResults);
+        searchFilters = new SearchFilters();
     }
 
     public void setUpViews() {
@@ -67,7 +79,8 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fetchQuery(query);
+                searchFilters.query = query;
+                fetchQuery();
                 return true;
             }
 
@@ -88,9 +101,20 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void fetchQuery(String query) {
+    public void fetchQuery() {
         AsyncHttpClient client = new AsyncHttpClient();
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=" + query;
+        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8";
+        if (searchFilters.query.length() != 0)
+            searchUrl += "&q=" + searchFilters.query;
+        if (searchFilters.imageSize.length() != 0)
+            searchUrl += "&imgsz=" + searchFilters.imageSize;
+        if (searchFilters.imageColor.length() != 0)
+            searchUrl += "&imgcolor=" + searchFilters.imageColor;
+        if (searchFilters.imageType.length() != 0)
+            searchUrl += "&imgtype=" + searchFilters.imageType;
+        if (searchFilters.siteFilter.length() != 0)
+            searchUrl += "&as_sitesearch=" + searchFilters.siteFilter;
+
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -99,16 +123,36 @@ public class SearchActivity extends AppCompatActivity {
                     imageResultsJSON = response.getJSONObject("responseData").getJSONArray("results");
                     imageResults.clear();
                     aImageResults.addAll(ImageResult.fromJSON(imageResultsJSON));
-                }
-                catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
             }
         });
+    }
+
+    public void showAdvancedSettings(MenuItem item) {
+        Intent intent = new Intent(SearchActivity.this, AdvancedSettingsActivity.class);
+        intent.putExtra("image_size", searchFilters.imageSize);
+        intent.putExtra("image_color", searchFilters.imageColor);
+        intent.putExtra("image_type", searchFilters.imageType);
+        intent.putExtra("site_filter", searchFilters.siteFilter);
+
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            searchFilters.imageSize = intent.getStringExtra("image_size");
+            searchFilters.imageColor = intent.getStringExtra("image_color");
+            searchFilters.imageType = intent.getStringExtra("image_type");
+            searchFilters.siteFilter = intent.getStringExtra("site_filter");
+
+            fetchQuery();
+        }
     }
 }

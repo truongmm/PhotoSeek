@@ -22,6 +22,10 @@
             android:name=".activities.ImageDisplayActivity"
             android:label="@string/title_activity_full_image" >
         </activity>
+        <activity
+            android:name=".activities.AdvancedSettingsActivity"
+            android:label="@string/title_activity_advanced_settings" >
+        </activity>
     </application>
 
 </manifest>

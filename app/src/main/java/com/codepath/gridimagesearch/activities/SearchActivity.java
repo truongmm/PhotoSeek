@@ -18,6 +18,7 @@ import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.adapters.ImageResultsAdapter;
 import com.codepath.gridimagesearch.models.ImageResult;
 import com.codepath.gridimagesearch.utils.EndlessScrollListener;
+import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -34,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
     private static final int RESULTS_COUNT = 8;
 
-    private GridView gvResults;
+    private StaggeredGridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private SearchFilters searchFilters;
@@ -60,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setUpViews() {
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        gvResults = (StaggeredGridView) findViewById(R.id.gvResults);
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

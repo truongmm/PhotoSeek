@@ -19,9 +19,9 @@ public class AdvancedSettingsActivity extends AppCompatActivity {
     Spinner spnrImageType;
     EditText etSiteFilter;
 
-    String[] VALID_IMAGE_SIZES = {"", "icon", "medium", "xxlarge", "huge"};
-    String[] VALID_IMAGE_COLORS = {"", "gray", "color"};
-    String[] VALID_IMAGE_TYPES = {"", "face", "photo", "clipart", "lineart"};
+    String[] VALID_IMAGE_SIZES = {"none", "icon", "medium", "xxlarge", "huge"};
+    String[] VALID_IMAGE_COLORS = {"none", "gray", "color"};
+    String[] VALID_IMAGE_TYPES = {"none", "face", "photo", "clipart", "lineart"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

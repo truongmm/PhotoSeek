@@ -116,11 +116,11 @@ public class SearchActivity extends AppCompatActivity {
         String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=" + RESULTS_COUNT;
         if (searchFilters.query.length() != 0)
             searchUrl += "&q=" + searchFilters.query;
-        if (searchFilters.imageSize.length() != 0)
+        if (searchFilters.imageSize != "none")
             searchUrl += "&imgsz=" + searchFilters.imageSize;
-        if (searchFilters.imageColor.length() != 0)
+        if (searchFilters.imageColor != "none")
             searchUrl += "&imgc=" + searchFilters.imageColor;
-        if (searchFilters.imageType.length() != 0)
+        if (searchFilters.imageType != "none")
             searchUrl += "&imgtype=" + searchFilters.imageType;
         if (searchFilters.siteFilter.length() != 0)
             searchUrl += "&as_sitesearch=" + searchFilters.siteFilter;

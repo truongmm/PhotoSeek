@@ -20,7 +20,7 @@ public class AdvancedSettingsActivity extends AppCompatActivity {
     EditText etSiteFilter;
 
     String[] VALID_IMAGE_SIZES = {"", "icon", "medium", "xxlarge", "huge"};
-    String[] VALID_IMAGE_COLORS = {"", "black", "blue", "brown", "gray", "green", "orange", "pink", "purple", "red", "teal", "white", "yellow"};
+    String[] VALID_IMAGE_COLORS = {"", "gray", "color"};
     String[] VALID_IMAGE_TYPES = {"", "face", "photo", "clipart", "lineart"};
 
     @Override

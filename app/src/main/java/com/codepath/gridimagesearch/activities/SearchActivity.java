@@ -119,7 +119,7 @@ public class SearchActivity extends AppCompatActivity {
         if (searchFilters.imageSize.length() != 0)
             searchUrl += "&imgsz=" + searchFilters.imageSize;
         if (searchFilters.imageColor.length() != 0)
-            searchUrl += "&imgcolor=" + searchFilters.imageColor;
+            searchUrl += "&imgc=" + searchFilters.imageColor;
         if (searchFilters.imageType.length() != 0)
             searchUrl += "&imgtype=" + searchFilters.imageType;
         if (searchFilters.siteFilter.length() != 0)
